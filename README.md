@@ -1,5 +1,6 @@
 # BOX
-TypeScriptで作成したWebブラウザ上で動作する3Dゲームです。
+TypeScriptで作成したWebブラウザ上で動作する3Dゲームです。  
+キャラデザインや背景デザインや3Dモデリングも自作しました。   
 
 ## 技術構成
 ・GLSL、TypeScript、css、HTML5  
