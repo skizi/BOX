@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Shader TEST</title>
+    <script src="../../../js/three.min.js"></script>
+
+
+    <script type="x-shader/x-vertex" id="vshader">
+    varying vec3 vNormal;
+    uniform float time;
+    uniform float radian;
+    
+    void main(void) {
+        vec3 pos = position;
+        float r = radian;
+
+        //x rotation
+        mat4 rotateX = mat4(
+                  1.0,      0.0,       0.0, 0.0,
+                  0.0, cos( r ), -sin( r ), 0.0,
+                  0.0, sin( r ),  cos( r ), 0.0,
+                  0.0,      0.0,       0.0, 1.0
+        );
+
+        //y rotation
+        mat4 rotateY = mat4(
+             cos( r ), 0.0, sin( r ), 0.0,
+             0.0,      1.0, 0.0,      0.0,
+             -sin( r ),0.0, cos( r ), 0.0,
+             0.0,      0.0, 0.0,      1.0
+        );
+
+        //z rotation
+        mat4 rotateZ = mat4(
+             cos( r ),-sin( r ), 0.0, 0.0,
+             sin( r ), cos( r ), 0.0, 0.0,
+                  0.0,      0.0, 1.0, 0.0,
+                  0.0,      0.0, 0.0, 1.0
+        );
+
+        
+        mat4 plusRot = rotateX * rotateY;
+        vNormal = normal;
+        gl_Position = projectionMatrix * modelViewMatrix * ( vec4(pos, 1.0) * plusRot );
+    }
+    </script>
+ 
+    <script type="x-shader/x-fragment" id="fshader">
+    uniform vec3 lightDirection;
+    uniform sampler2D texture;
+
+    varying vec3 vNormal;
+
+
+    
+    void main(void) {
+
+        float diffuse = max(0.0, dot(vNormal, lightDirection));
+        gl_FragColor = vec4( diffuse, diffuse, diffuse, 1.0 );
+        
+    }
+    </script>
+</head>
+<body>
+
+    <script>
+
+
+        var scene;
+        var renderer;
+        var camera;
+
+
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        var fov = 100;
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera(fov, aspect, 1, 20000);
+        camera.position.x = 0;
+        camera.position.y = 150;
+        camera.position.z = 200;
+        camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, .5);
+        light.position.set( 100, 500, 200);
+        light.castShadow = true;
+        scene.add(light);
+
+
+
+        var material = new THREE.ShaderMaterial({
+            vertexShader: document.getElementById('vshader').textContent,
+            fragmentShader: document.getElementById('fshader').textContent,
+            
+            uniforms: {
+                texture: {
+                    type: 't', value: THREE.ImageUtils.loadTexture('img/toon1.png')
+                },
+                lightDirection: {
+                    type: 'v3',
+                    value: light.position.clone().normalize()/*-mesh.position.clone().normalize()*/
+                },
+                time:{
+                    type:"f",
+                    value:0.0
+                },
+                radian:{
+                    type:"f",
+                    value:0.0
+                }
+            },
+            blending: THREE.NoBlending, transparent: true, depthTest: false
+        });
+
+
+
+        var geometry = new THREE.BoxGeometry(100, 100, 100, 30, 30);
+        var mesh = new THREE.Mesh(geometry, material);
+        mesh.position.y = 150;
+        mesh.castShadow  = true;
+        scene.add(mesh);
+
+
+        var material2 = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        //material = new THREE.MeshBasicMaterial( { color:0xff0000, wireframe:true } );
+        geometry = new THREE.PlaneGeometry( 400, 400, 5, 5 );
+        mesh = new THREE.Mesh( geometry, material2 );
+        mesh.rotation.x = 90 * 180 / Math.PI;
+        mesh.receiveShadow = true;
+        scene.add( mesh );
+
+        var start = Date.now();
+        animate();
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+
+            var time = .0001 * ( Date.now() - start );
+            material.uniforms.time.value = time;
+            material.uniforms.radian.value = radian = time * 180 / Math.PI;
+
+
+            renderer.render(scene, camera);
+
+        }
+
+
+    </script>
+
+
+
+</body>
+</html>

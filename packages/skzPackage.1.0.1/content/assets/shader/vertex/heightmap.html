@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>heightmap</title>
+		<!--<script src="http://wgld.org/j/minMatrixb.js" type="text/javascript"></script>-->
+    <script src="../../../js/three.min.js"></script>
+		
+	
+		
+    		<script type="x-shader/x-vertex" id="vshader">
+			
+		
+		uniform sampler2D texture;
+		uniform float time;
+		
+		varying   vec4 vColor;
+		varying vec3 vNormal;
+		varying vec2 vUv;
+		
+
+
+
+
+
+		void main(){
+			
+			vec3 tex = texture2D( texture, vec2( uv.x + time, uv.y ) ).xyz;
+			vec3 p = position + normal * ( tex * vec3( 30 )  );
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( p, 1.0 );
+      		vNormal = normal;
+      		vUv = uv;
+		}
+		</script>
+		
+    		<script type="x-shader/x-fragment" id="fshader">
+			
+		uniform sampler2D texture;
+		uniform float time;
+		
+		varying vec4 vColor;
+		varying vec3 vNormal;
+		varying vec2 vUv;
+		
+		
+
+		void main(void){
+			
+			
+			vec3 tex = texture2D( texture,  vec2( vUv.x + time, vUv.y ) ).xyz;
+			float diffuse = clamp( dot( vNormal, vec3( 0.0, 0.0, -1.0 ) ), 0.0, 1.0 );
+			gl_FragColor = vec4( tex, 1.0);
+			
+		}
+		</script>
+		
+    <script>
+		
+	</script>
+	</head>
+	<body>
+
+
+    <script>
+
+
+        var scene;
+        var renderer;
+        var camera;
+
+
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        var fov = 100;
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera(fov, aspect, 1, 20000);
+        camera.position.x = 0;
+        camera.position.y = 150;
+        camera.position.z = 200;
+        camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, .5);
+        light.position.set( 100, 500, 200);
+        light.castShadow = true;
+        scene.add(light);
+
+
+
+	var noiseTexture = THREE.ImageUtils.loadTexture('img/noise1.jpg');
+	noiseTexture.wrapS = noiseTexture.wrapT = THREE.RepeatWrapping;//重要 
+        var material = new THREE.ShaderMaterial({
+				vertexShader: document.getElementById('vshader').textContent,
+				fragmentShader: document.getElementById('fshader').textContent,
+				uniforms: {
+					texture: { 
+							type: 't',
+							value: noiseTexture
+						},
+					time:{
+						type:"f",
+						value:0.0
+					}
+				},
+				side: THREE.BackSide
+			});
+
+
+
+        var geometry = new THREE.SphereGeometry(100, 100, 100);
+        var mesh = new THREE.Mesh(geometry, material);
+        mesh.position.y = 150;
+        mesh.castShadow  = true;
+        scene.add(mesh);
+
+
+        var material2 = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        //material = new THREE.MeshBasicMaterial( { color:0xff0000, wireframe:true } );
+        geometry = new THREE.PlaneGeometry( 400, 400, 5, 5 );
+        mesh = new THREE.Mesh( geometry, material2 );
+        mesh.rotation.x = 90 * 180 / Math.PI;
+        mesh.receiveShadow = true;
+        scene.add( mesh );
+
+
+		var rotX = 0;
+		var start = Date.now();
+        animate();
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+
+            renderer.render(scene, camera);
+
+			material.uniforms.time.value = .0001 * ( Date.now() - start );
+		
+        }
+
+
+    </script>
+
+	</body>
+</html>

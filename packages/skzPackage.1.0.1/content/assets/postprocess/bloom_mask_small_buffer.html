@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Shader TEST</title>
+    <script src="../../js/three.min.js"></script>
+    <script src="../../assets/shader/shaders/HorizontalBlurShader.js"></script>
+    <script src="../../assets/shader/shaders/VerticalBlurShader.js"></script>
+    <script src="../../assets/shader/shaders/BokehShader.js"></script>
+    <script src="../../js/postprocessing/BokehPass.js"></script>
+    <script src="../../js/postprocessing/EffectComposer.js"></script>
+    <script src="../../js/postprocessing/RenderPass.js"></script>
+    <script src="../../js/postprocessing/BloomPass.js"></script>
+    <script src="../../js/postprocessing/ShaderPass.js"></script>
+    <script src="../../js/postprocessing/MaskPass.js"></script>
+    <script src="../../js/postprocessing/SavePass.js"></script>
+    <script src="../../js/shaders/CopyShader.js"></script>
+    <script src="../../js/shaders/ConvolutionShader.js"></script>
+    <script src="../../js/Detector.js"></script>
+
+
+    <script type="x-shader/x-vertex" id="vshader">
+    varying vec2 vUv;
+    
+    void main(void) {
+        vec3 pos = position;
+        
+        vUv = vec2( uv.x, uv.y );
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+    </script>
+ 
+    <script type="x-shader/x-fragment" id="fshader">
+    uniform sampler2D tDiffuse;
+    uniform sampler2D tBlur;
+    uniform sampler2D tLayer2;
+
+    varying vec2 vUv;
+
+
+
+    vec3 alphaBlend( vec4 c1, vec4 c2 ){
+        vec3 c = c1.a * c1.xyz + ( 1.0 - c1.a ) * c2.xyz;
+        return c;
+    }
+
+    
+    void main(void) {
+
+        vec4 layer1Tex = texture2D( tDiffuse, vUv );
+        vec4 blurTex = texture2D( tBlur, vUv );
+        vec4 layer2Tex = texture2D( tLayer2, vUv );
+
+        vec4 c = vec4( alphaBlend( layer2Tex, layer1Tex ), 1.0) + blurTex;
+        gl_FragColor = c;
+        
+    }
+    </script>
+</head>
+<body>
+
+    <script>
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+
+
+        var scene = new THREE.Scene();
+        var glowScene = new THREE.Scene();
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor( 0x000000, 0 );
+        renderer.setSize(w, h);
+        renderer.shadowMapEnabled = true;
+        renderer.autoClear = false;
+        renderer.sortObjects = true;
+        document.body.appendChild(renderer.domElement);
+
+
+        var fov = 100;
+        var aspect = w / h;
+        var camera = new THREE.PerspectiveCamera(fov, aspect, 1, 20000);
+        camera.position.x = 0;
+        camera.position.y = 150;
+        camera.position.z = 200;
+        camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        var glowCamera = new THREE.PerspectiveCamera( fov, aspect, 1, 20000);
+        glowCamera.position = camera.position;
+        glowCamera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, .5);
+        light.position.set( 100, 500, 200);
+        light.castShadow = true;
+        scene.add(light);
+        var light2 = new THREE.DirectionalLight(0xffffff, .5);
+        light2.position.set( 100, 500, 200);
+        light2.castShadow = true;
+        glowScene.add(light2);
+
+
+        var material = new THREE.MeshLambertMaterial({ color: 0x00ffff });
+        var geometry = new THREE.SphereGeometry( 50, 30, 30);
+        
+        var mesh = new THREE.Mesh( geometry, material );
+        mesh.position.y = 50;
+        mesh.castShadow  = true;
+        mesh.overdraw = true;
+        scene.add( mesh );
+
+        material = new THREE.MeshLambertMaterial({ color: 0xffff00 });
+        var mesh2 = new THREE.Mesh( geometry, material );
+        mesh2.position.y = 150;
+        mesh2.castShadow  = true;
+        glowScene.add( mesh2 );
+
+
+
+
+
+
+        //----------------------glow effect-------------------
+        //blurComposer
+        var renderTarget = new THREE.WebGLRenderTarget( w / 10, h / 10 );
+        var blurComposer = new THREE.EffectComposer( renderer, renderTarget );
+        
+        var renderPass = new THREE.RenderPass( glowScene, glowCamera, null, null, 0 );
+        blurComposer.addPass( renderPass );
+
+        var hblur = new THREE.ShaderPass( THREE.HorizontalBlurShader );
+        var vblur = new THREE.ShaderPass( THREE.VerticalBlurShader );
+         
+        var bluriness = 3;
+        hblur.uniforms[ "h" ].value = bluriness / w;
+        vblur.uniforms[ "v" ].value = bluriness / h;
+        blurComposer.addPass(hblur);
+        blurComposer.addPass(vblur);
+        /*
+        //コメントアウトを外すと画面に直接レンダリングされる（layer1Composerに上書きされるので確認はできないが）
+        var toScreen = new THREE.ShaderPass(THREE.CopyShader);
+        toScreen.renderToScreen = true;
+        blurComposer.addPass(toScreen);
+        */
+
+        //layer2Composer
+        var obj = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: false };
+        renderTarget = new THREE.WebGLRenderTarget( w, h, obj );
+        var layer2Composer = new THREE.EffectComposer( renderer, renderTarget );
+        renderPass = new THREE.RenderPass( glowScene, glowCamera, null, null, 0 );
+        layer2Composer.addPass( renderPass );
+        mask = new THREE.MaskPass( glowScene, glowCamera );
+        layer2Composer.addPass( mask );
+        layer2Composer.addPass( new THREE.ClearMaskPass() );
+        /*
+        //コメントアウトを外すと画面に直接レンダリングされる（layer1Composerに上書きされるので確認はできないが）
+        var toScreen = new THREE.ShaderPass(THREE.CopyShader);
+        toScreen.renderToScreen = true;
+        layer2Composer.addPass(toScreen);
+        */
+
+
+        //layer1Composer
+        var layer1Composer = new THREE.EffectComposer( renderer );
+        renderPass = new THREE.RenderPass( scene, camera );
+        layer1Composer.addPass( renderPass );
+
+        var shader = {
+            uniforms: {
+                tDiffuse: { type: "t", value: null },
+                tBlur: { type: "t", value: blurComposer.renderTarget2 },
+                tLayer2: { type: "t", value: layer2Composer.renderTarget2 }
+            },
+            vertexShader: document.getElementById('vshader').textContent,
+            fragmentShader: document.getElementById('fshader').textContent
+        };
+        layer1Composer.addPass( new THREE.ShaderPass( shader ) );
+        
+        var toScreen = new THREE.ShaderPass( THREE.CopyShader );
+        toScreen.renderToScreen = true;
+        layer1Composer.addPass( toScreen );
+        
+
+
+
+
+
+        var rot = 0;
+        var radius = 200;
+        animate();
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+            rot += 2;
+            var radian = rot * Math.PI / 180;
+            var x = Math.cos( radian ) * radius;
+            var z = Math.sin( radian ) * radius;
+            var pos = new THREE.Vector3( x, 150, z );
+            camera.position = glowCamera.position = pos;
+            camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+            glowCamera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+
+            blurComposer.render( 0.1 );
+            layer2Composer.render( 0.1 );
+            layer1Composer.render( 0.1 );
+
+        }
+
+
+    </script>
+
+
+
+</body>
+</html>

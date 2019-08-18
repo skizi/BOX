@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Material Check</title>
+    <style type="text/css">
+        div#debug{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #ffffff;
+        }
+    </style>
+
+
+    <script src="../../../js/three.min.js"></script>
+
+    <script src="../../../js/postprocessing/EffectComposer.js"></script>
+    <script src="../../../js/postprocessing/MaskPass.js"></script>
+    <script src="../../../js/postprocessing/RenderPass.js"></script>
+    <script src="../../../js/postprocessing/ShaderPass.js"></script>
+    <script src="../../../js/postprocessing/BloomPass.js"></script>
+    <script src="../../../js/shaders/CopyShader.js"></script>
+    <script src="../../../js/shaders/ConvolutionShader.js"></script>
+    <script src="../../../js/shaders/HorizontalTiltShiftShader.js"></script>
+    <script src="../../../js/shaders/VerticalTiltShiftShader.js"></script>
+    <script src="../../../js/shaders/HorizontalBlurShader.js"></script>
+    <script src="../../../js/shaders/VerticalBlurShader.js"></script>
+    <script src="../../../js/shaders/DotScreenShader.js"></script>
+    <script src="../../../js/shaders/RGBShiftShader.js"></script>
+    <script src="../../../js/shaders/HexVignetteShader.js"></script>
+
+
+    <script src="../../../js/createjs-2013.12.12.min.js"></script>
+    <script src="../../../js/soundjs/WebAudioPlugin.js"></script>
+    <script src="../../../js/soundjs/HTMLAudioPlugin.js"></script>
+    <script src="../../../js/soundjs/FlashPlugin.js"></script>
+
+    <script src="../../../js/swfobject.js"></script>
+</head>
+<body>
+
+    <script>
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+        var scene;
+        var renderer;
+        var camera;
+
+
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(w, h);
+        renderer.shadowMapEnabled = true;
+        renderer.shadowMapSoft = true;
+        renderer.shadowMapType = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        var fov = 100;
+        var aspect = w / h;
+        camera = new THREE.PerspectiveCamera(fov, aspect, 1, 20000);
+        camera.position.x = 0;
+        camera.position.y = 150;
+        camera.position.z = 200;
+        camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set( 100, 500, 200);
+        light.castShadow = true;
+        light.shadowDarkness = 0.5;
+        light.shadowBias = .001;
+        light.shadowMapWidth = 2048;
+        light.shadowMapHeight = 2048;
+        scene.add(light);
+
+
+
+        /*
+        var geometry = new THREE.SphereGeometry(100, 30, 30);
+        var sphereMesh = new THREE.Mesh(geometry, material);
+        sphereMesh.position.y = 150;
+        sphereMesh.castShadow  = true;
+        scene.add(sphereMesh);
+        */
+        var mesh;
+        var url = "models/scene2.js";
+        modelLoad( url, "scene", callback );
+        function callback( result ){
+
+            mesh = result.objects.Icosphere;
+            mesh.position.y = 150;
+            mesh.castShadow  = true;
+            mesh.scale.multiplyScalar( 80 );
+            mesh.updateMatrix(); 
+
+            var urls = [  'img/skybox/sky_posX.jpg',  'img/skybox/sky_negX.jpg',  'img/skybox/sky_posY.jpg',  'img/skybox/sky_negY.jpg',  'img/skybox/sky_posZ.jpg',  'img/skybox/sky_negZ.jpg'];
+            var textureCube = THREE.ImageUtils.loadTextureCube(urls);
+            var material = new THREE.MeshPhongMaterial({
+                color : 0xddfffc,
+                envMap : textureCube,
+                shading   : THREE.FlatShading,
+                specular:0xffff00,
+                specularMap:THREE.ImageUtils.loadTexture( "img/specular.jpg" ),
+                shininess : 7,
+                normalMap:THREE.ImageUtils.loadTexture( "img/normal.jpg" ),
+                normalScale: new THREE.Vector2(.5, .5)
+            });
+            //var material =  new THREE.MeshPhongMaterial({ color: 0x88dcff, specular:1.5 });
+            mesh.material = material;
+            scene.add( mesh );
+
+            addSound();
+        }
+
+
+
+        var material = new THREE.MeshPhongMaterial({
+                color : 0xddfffc,
+                map : THREE.ImageUtils.loadTexture( "img/snow_diffuse.jpg" ),
+                shading   : THREE.FlatShading,
+                specular:0xffff00,
+                specularMap:THREE.ImageUtils.loadTexture( "img/snow_specular.jpg" ),
+                normalMap:THREE.ImageUtils.loadTexture( "img/snow_normal.jpg" ),
+                normalScale: new THREE.Vector2(.5, .5)
+            });
+        geometry = new THREE.PlaneGeometry( 400, 400, 5, 5 );
+        var mesh2 = new THREE.Mesh( geometry, material );
+        mesh2.rotation.x = 270 * Math.PI / 180;
+        mesh2.receiveShadow = true;
+        scene.add( mesh2 );
+
+        var speed = 100;
+        var clock = new THREE.Clock();
+        var rot = 0;
+        var radius = 200;
+        animate();
+        function animate() {
+
+            requestAnimationFrame(animate);
+            var delta = clock.getDelta();
+
+            rot += speed * delta;
+            var radian = rot * Math.PI / 180;
+            if( mesh ) mesh.rotation.y = mesh.rotation.x = radian;
+
+
+            var rot2 = rot / 2;
+            var radian = rot2 * Math.PI / 180;
+            var x = Math.cos( radian ) * radius;
+            var z = Math.sin( radian ) * radius;
+            camera.position = new THREE.Vector3( x, z / 2 + 150, z );
+            camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+            //sound
+            soundRender();
+
+            if ( composer ) composer.render();
+
+            renderer.render(scene, camera);
+
+        }
+
+
+
+
+
+    //-------------model load--------------------
+    var callbackFunc;
+
+    function modelLoad(url, type, _callbackFunc ) {
+
+        var sceneLoader = new THREE.SceneLoader();
+        callbackFunc = _callbackFunc;
+
+        switch( type ){
+
+            case "scene":
+                sceneLoader.load(url, sceneLoadCompHandler);
+                break;
+                
+            case "json":
+                jsonLoader.load(url, jsonLoadCompHandler);
+                break;
+        }
+    }
+
+
+    function sceneLoadCompHandler(result) {
+
+        var scene = result.scene;
+        /*
+        for (var m in result.materials) {
+            //alert( m );
+        }
+        for (var l in result.lights) {
+            //alert(l);
+        }
+        for (var o in result.objects) {
+            //alert(o);
+        }
+
+        alert(result.objects.Cube);
+        */
+
+        callbackFunc( result );
+    }
+
+
+
+
+    //-------------post process--------------------
+    var composer;
+    //initPostProcess();
+    //addPostProcess( "bloom" );
+    //addPostProcess( "dof" );
+    //addPostProcess( "normalMap" );
+    //renderToScreen();
+    function initPostProcess() {
+
+        renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
+        renderTarget = new THREE.WebGLRenderTarget( w, h, renderTargetParameters);
+
+        renderer.autoClear = false;
+        composer = new THREE.EffectComposer(renderer /*,renderTarget*/);
+        composer.addPass(new THREE.RenderPass(scene, camera));
+
+    }
+
+
+    function addPostProcess( type ) {
+
+        switch( type ){
+
+            case "bloom":
+                addBloom();
+                break;
+
+            case "dof":
+                addDof();
+                break;
+
+            case "rgbShift":
+                addRgbShift();
+                break;
+
+            case "dot":
+                addDot();
+                break;
+
+            case "normalMap":
+                addNormalMap();
+                break;
+
+        }
+
+
+    }
+
+
+
+
+    function renderToScreen() {
+
+        var toScreen = new THREE.ShaderPass(THREE.CopyShader);
+        toScreen.renderToScreen = true;
+        composer.addPass(toScreen);
+
+    }
+
+
+    function addBloom() {
+
+
+        composer.addPass(new THREE.BloomPass( 1, 25 ));   //なぜか第三引数を指定すると右上にずれる
+        //renderToScreen();
+    }
+
+
+    function addDof(){
+
+        var hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader);
+        var vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader);
+
+        var bluriness = 3;//ぼけの強さ
+
+        hblur.uniforms['h'].value = bluriness / w;
+        vblur.uniforms['v'].value = bluriness / h;
+        hblur.uniforms['r'].value = vblur.uniforms['r'].value = 0.5;
+
+        composer.addPass(hblur);
+        composer.addPass(vblur);
+    }
+
+     
+    function addRgbShift() {
+
+        var rgbEffect = new THREE.ShaderPass(THREE.RGBShiftShader);
+        rgbEffect.uniforms['amount'].value = 0.001;
+        rgbEffect.uniforms['angle'].value = 0;
+        composer.addPass(rgbEffect);
+
+    }
+
+
+    function addDot() {
+         
+        var effect = new THREE.ShaderPass(THREE.DotScreenShader);
+        effect.uniforms['angle'].value = 0;
+        effect.uniforms['scale'].value = 500;//でかいほど細かい目になる
+        composer.addPass(effect);
+
+    }
+
+
+    function addNormalMap(){
+
+        var normalMap = new THREE.ShaderPass( THREE.HexVignetteShader );
+        normalMap.uniforms['tHex'].value = THREE.ImageUtils.loadTexture( "img/test_normal.jpg" );
+        normalMap.uniforms[ 'size' ].value = 512.0 * (w/1633);
+        normalMap.uniforms[ 'rx' ].value = w;
+        normalMap.uniforms[ 'ry' ].value = h;
+        normalMap.uniforms[ 'color' ].value = new THREE.Color(0x458ab1);
+        composer.addPass(normalMap);
+
+    }
+
+
+    //-------------add sound--------------------
+    var soundSrc = "sound/denkiSwitch.mp3";
+    var debug;
+    var freqArray = [];
+    var analyserNode;
+    var freqFloatData;
+    var freqByteData;
+    var timeByteData;
+    var FFTSIZE = 1024;
+    var CIRCLES;
+    var circleFreqChunk;
+    var soundInstance;
+    var verticesDefaults = [];
+    var ua = window.navigator.userAgent.toLowerCase();
+    var isIE = (ua.indexOf('msie') >= 0 || ua.indexOf('trident') >= 0);
+    function addSound(){
+        debug = document.getElementById( "debug" );
+
+        //set vertices
+        CIRCLES = mesh.geometry.vertices.length;
+        for( var i = 0; i < CIRCLES; i++ ){
+            verticesDefaults[ i ] = mesh.geometry.vertices[i].clone();
+            console.log( verticesDefaults[ i ] );
+        }
+
+        //set sound
+        if( isIE ){
+            var vars = { flag:null };
+            var params = { menu:"false", allowScriptAccess:"always" };
+            var attributes = { id:"flashContent", name:"flashContent" };
+            swfobject.embedSWF("SoundPlugin.swf", "flashContent", "100", "100", "9", "js/expressInstall.swf", vars, params, attributes );
+        }else{
+            createjs.Sound.addEventListener("fileload", createjs.proxy(handleLoad,this));
+            createjs.Sound.registerSound( soundSrc );
+        }
+    }
+
+
+    function flashSetUpComp(){
+        
+        var flash = document.all ? window["flashContent"] : document["flashContent"];
+        //var flash = document.flashContent || window.flashContent;
+        flash.setUrl( soundSrc );
+    }
+
+
+    function setFlashSoundArray( array ){
+
+        freqArray = array;
+
+    }
+
+
+    function handleLoad(evt) {
+
+        //セキュリティの問題か、サーバー上でないとcontextを取得できない
+        var context = createjs.WebAudioPlugin.context;
+
+        analyserNode = context.createAnalyser();
+        analyserNode.fftSize = FFTSIZE; 
+        analyserNode.smoothingTimeConstant = 0.85; 
+        analyserNode.connect(context.destination);
+
+        var dynamicsNode = createjs.WebAudioPlugin.dynamicsCompressorNode;
+        dynamicsNode.disconnect();
+        dynamicsNode.connect(analyserNode);
+
+        
+
+
+        soundInstance = createjs.Sound.play(soundSrc, {loop:-1});
+
+    }
+
+
+    function soundRender(){
+
+        if( isIE ){
+            if( !freqArray.length ) return;
+            setVertexPosition( .5 );
+            debug.innerHTML = freqArray[ 0 ];
+        }else{
+            if( !analyserNode ) return;
+
+            freqArray = [];
+
+            
+            /*
+            var range = analyserNode.maxDecibels - analyserNode.minDecibels;
+            var spectrums = new Float32Array(analyserNode.frequencyBinCount);
+            analyserNode.getFloatFrequencyData(spectrums);
+            for (var i = 0, len = spectrums.length; i < len; i++) {
+                var y = (spectrums[i] - analyserNode.maxDecibels) / range;
+                freqArray.push( y );
+            }
+            */
+
+            /*
+            //getByteFrequencyData
+            var spectrums = new Uint8Array(analyserNode.frequencyBinCount);
+            analyserNode.getByteFrequencyData(spectrums);
+            for (var i = 0, len = spectrums.length; i < len; i++) {
+                var y = spectrums[i] / 255; //0 - 1
+                freqArray.push( y );
+            }
+            */
+            
+            
+            //getByteTimeDomainData
+             var times = new Uint8Array(analyserNode.fftSize);
+            analyserNode.getByteTimeDomainData(times);
+            for (var i = 0, len = times.length; i < len; i++) {
+                var y = times[i] / 255;
+                freqArray.push( y );
+            }
+
+            setVertexPosition( .5 );
+            debug.innerHTML = freqArray[ 0 ];
+        }
+
+    }
+
+
+    function setVertexPosition( freq ){
+
+        for(var i=0; i<CIRCLES; i++) {
+            
+            var pw = freqArray[i];
+
+            var pos = verticesDefaults[i];
+            var normal = pos.clone().normalize();
+            pos = normal.multiplyScalar( pw * freq ).add( pos.clone() );
+            mesh.geometry.vertices[i] = pos;
+            mesh.geometry.verticesNeedUpdate = true;
+        }
+
+    }
+
+    </script>
+
+
+    <div id="flashContent">
+    </div>
+    <div id="debug">DEBUG</div>
+</body>
+</html>

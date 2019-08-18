@@ -1,0 +1,837 @@
+﻿
+/*-------------------------------------title animation---------------------------------------*/
+.title-animation{
+  animation: titleAnimationFrames ease 1s;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  -webkit-animation: titleAnimationFrames ease 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform-origin: 50% 50%;
+  -moz-animation: titleAnimationFrames ease 1s;
+  -moz-animation-iteration-count: infinite;
+  -moz-transform-origin: 50% 50%;
+  -o-animation: titleAnimationFrames ease 1s;
+  -o-animation-iteration-count: infinite;
+  -o-transform-origin: 50% 50%;
+  -ms-animation: titleAnimationFrames ease 1s;
+  -ms-animation-iteration-count: infinite;
+  -ms-transform-origin: 50% 50%;
+}
+
+@keyframes titleAnimationFrames{
+  0% {
+    transform:  translate(0px,0px)  ;
+  }
+  50% {
+    transform:  translate(0px,5px)  ;
+  }
+  100% {
+    transform:  translate(0px,0px)  ;
+  }
+}
+
+@-moz-keyframes titleAnimationFrames{
+  0% {
+    -moz-transform:  translate(0px,0px)  ;
+  }
+  50% {
+    -moz-transform:  translate(0px,5px)  ;
+  }
+  100% {
+    -moz-transform:  translate(0px,0px)  ;
+  }
+}
+
+@-webkit-keyframes titleAnimationFrames {
+  0% {
+    -webkit-transform:  translate(0px,0px)  ;
+  }
+  50% {
+    -webkit-transform:  translate(0px,5px)  ;
+  }
+  100% {
+    -webkit-transform:  translate(0px,0px)  ;
+  }
+}
+
+@-o-keyframes titleAnimationFrames {
+  0% {
+    -o-transform:  translate(0px,0px)  ;
+  }
+  50% {
+    -o-transform:  translate(0px,5px)  ;
+  }
+  100% {
+    -o-transform:  translate(0px,0px)  ;
+  }
+}
+
+@-ms-keyframes titleAnimationFrames {
+  0% {
+    -ms-transform:  translate(0px,0px)  ;
+  }
+  50% {
+    -ms-transform:  translate(0px,5px)  ;
+  }
+  100% {
+    -ms-transform:  translate(0px,0px)  ;
+  }
+}
+
+.blink-animation{
+  animation: blinkAnimationFrames linear 1.5s;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  -webkit-animation: blinkAnimationFrames linear 1.5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform-origin: 50% 50%;
+  -moz-animation: blinkAnimationFrames linear 1.5s;
+  -moz-animation-iteration-count: infinite;
+  -moz-transform-origin: 50% 50%;
+  -o-animation: blinkAnimationFrames linear 1.5s;
+  -o-animation-iteration-count: infinite;
+  -o-transform-origin: 50% 50%;
+  -ms-animation: blinkAnimationFrames linear 1.5s;
+  -ms-animation-iteration-count: infinite;
+  -ms-transform-origin: 50% 50%;
+}
+
+@keyframes blinkAnimationFrames{
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-moz-keyframes blinkAnimationFrames{
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-webkit-keyframes blinkAnimationFrames {
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-o-keyframes blinkAnimationFrames {
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-ms-keyframes blinkAnimationFrames {
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+.easing0 {
+    -moz-transition-duration: .5s;
+    -webkit-transition-duration: .5s;
+    -o-transition-duration: .5s;
+    -ms-transition-duration: .5s;
+    -moz-transition-timing-function: ease-in-out;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out;
+    -ms-transition-timing-function: ease-in-out;
+}
+
+/*-------------------------------------fade-in0-----------------------------------------*/
+.fade-in0{
+  animation: fadeIn0 linear .5s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode:forwards; /*when the spec is finished*/
+  -webkit-animation: fadeIn0 linear .5s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+  -moz-animation: fadeIn0 linear .5s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode:forwards; /*FF 5+*/
+  -o-animation: fadeIn0 linear .5s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode:forwards; /*Not implemented yet*/
+  -ms-animation: fadeIn0 linear .5s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode:forwards; /*IE 10+*/
+}
+
+@keyframes fadeIn0{
+  0% {
+    transform:  scaleX(0) scaleY(0) ;
+  }
+  22% {
+    transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  86% {
+    transform:  scaleX(1.30) scaleY(1.30) ;
+  }
+  100% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-moz-keyframes fadeIn0{
+  0% {
+    -moz-transform:  scaleX(0) scaleY(0) ;
+  }
+  22% {
+    -moz-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  86% {
+    -moz-transform:  scaleX(1.30) scaleY(1.30) ;
+  }
+  100% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-webkit-keyframes fadeIn0 {
+  0% {
+    -webkit-transform:  scaleX(0) scaleY(0) ;
+  }
+  22% {
+    -webkit-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  86% {
+    -webkit-transform:  scaleX(1.30) scaleY(1.30) ;
+  }
+  100% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-o-keyframes fadeIn0 {
+  0% {
+    -o-transform:  scaleX(0) scaleY(0) ;
+  }
+  22% {
+    -o-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  86% {
+    -o-transform:  scaleX(1.30) scaleY(1.30) ;
+  }
+  100% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-ms-keyframes fadeIn0 {
+  0% {
+    -ms-transform:  scaleX(0) scaleY(0) ;
+  }
+  22% {
+    -ms-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  86% {
+    -ms-transform:  scaleX(1.30) scaleY(1.30) ;
+  }
+  100% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+
+/*-------------------------------------fade-in1-----------------------------------------*/
+.fade-in1{
+  animation: fadeIn1 linear .3s;
+  animation-iteration-count: 1;
+  transform-origin: 0% 0%;
+  animation-fill-mode:forwards; /*when the spec is finished*/
+  -webkit-animation: fadeIn1 linear .3s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 0% 0%;
+  -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+  -moz-animation: fadeIn1 linear .3s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 0% 0%;
+  -moz-animation-fill-mode:forwards; /*FF 5+*/
+  -o-animation: fadeIn1 linear .3s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 0% 0%;
+  -o-animation-fill-mode:forwards; /*Not implemented yet*/
+  -ms-animation: fadeIn1 linear .3s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 0% 0%;
+  -ms-animation-fill-mode:forwards; /*IE 10+*/
+}
+
+@keyframes fadeIn1{
+  0% {
+    transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+  50% {
+    transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-moz-keyframes fadeIn1{
+  0% {
+    -moz-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+  50% {
+    -moz-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-webkit-keyframes fadeIn1 {
+  0% {
+    -webkit-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+  50% {
+    -webkit-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-o-keyframes fadeIn1 {
+  0% {
+    -o-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+  50% {
+    -o-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-ms-keyframes fadeIn1 {
+  0% {
+    -ms-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+  50% {
+    -ms-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+/*-------------------------------------fade-in2-----------------------------------------*/
+.fade-in2{
+  animation: fadeIn2 linear .2s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode:forwards; /*when the spec is finished*/
+  -webkit-animation: fadeIn2 linear .2s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+  -moz-animation: fadeIn2 linear .2s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode:forwards; /*FF 5+*/
+  -o-animation: fadeIn2 linear .2s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode:forwards; /*Not implemented yet*/
+  -ms-animation: fadeIn2 linear .2s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode:forwards; /*IE 10+*/
+}
+
+@keyframes fadeIn2{
+  0% {
+    transform:  scaleY(0.00) ;
+  }
+  100% {
+    transform:  scaleY(1.00) ;
+  }
+}
+
+@-moz-keyframes fadeIn2{
+  0% {
+    -moz-transform:  scaleY(0.00) ;
+  }
+  100% {
+    -moz-transform:  scaleY(1.00) ;
+  }
+}
+
+@-webkit-keyframes fadeIn2 {
+  0% {
+    -webkit-transform:  scaleY(0.00) ;
+  }
+  100% {
+    -webkit-transform:  scaleY(1.00) ;
+  }
+}
+
+@-o-keyframes fadeIn2 {
+  0% {
+    -o-transform:  scaleY(0.00) ;
+  }
+  100% {
+    -o-transform:  scaleY(1.00) ;
+  }
+}
+
+@-ms-keyframes fadeIn2 {
+  0% {
+    -ms-transform:  scaleY(0.00) ;
+  }
+  100% {
+    -ms-transform:  scaleY(1.00) ;
+  }
+}
+
+
+/*-------------------------------------fade-out0-----------------------------------------*/
+.fade-out0{
+  animation: fadeOut0 linear .5s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode:forwards; /*when the spec is finished*/
+  -webkit-animation: fadeOut0 linear .5s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+  -moz-animation: fadeOut0 linear .5s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode:forwards; /*FF 5+*/
+  -o-animation: fadeOut0 linear .5s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode:forwards; /*Not implemented yet*/
+  -ms-animation: fadeOut0 linear .5s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode:forwards; /*IE 10+*/
+}
+
+@keyframes fadeOut0{
+  0% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  22% {
+    transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    transform:  scaleX(0) scaleY(0) ;
+  }
+  86% {
+    transform:  scaleX(0.50) scaleY(0.50) ;
+  }
+  100% {
+    transform:  scaleX(0) scaleY(0) ;
+  }
+}
+
+@-moz-keyframes fadeOut0{
+  0% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  22% {
+    -moz-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -moz-transform:  scaleX(0) scaleY(0) ;
+  }
+  86% {
+    -moz-transform:  scaleX(0.50) scaleY(0.50) ;
+  }
+  100% {
+    -moz-transform:  scaleX(0) scaleY(0) ;
+  }
+}
+
+@-webkit-keyframes fadeOut0 {
+  0% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  22% {
+    -webkit-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -webkit-transform:  scaleX(0) scaleY(0) ;
+  }
+  86% {
+    -webkit-transform:  scaleX(0.50) scaleY(0.50) ;
+  }
+  100% {
+    -webkit-transform:  scaleX(0) scaleY(0) ;
+  }
+}
+
+@-o-keyframes fadeOut0 {
+  0% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  22% {
+    -o-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -o-transform:  scaleX(0) scaleY(0) ;
+  }
+  86% {
+    -o-transform:  scaleX(0.50) scaleY(0.50) ;
+  }
+  100% {
+    -o-transform:  scaleX(0) scaleY(0) ;
+  }
+}
+
+@-ms-keyframes fadeOut0 {
+  0% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  22% {
+    -ms-transform:  scaleX(2.00) scaleY(2.00) ;
+  }
+  72% {
+    -ms-transform:  scaleX(0) scaleY(0) ;
+  }
+  86% {
+    -ms-transform:  scaleX(0.50) scaleY(0.50) ;
+  }
+  100% {
+    -ms-transform:  scaleX(0) scaleY(0) ;
+  }
+}
+
+
+/*-------------------------------------fade-out1-----------------------------------------*/
+.fade-out1{
+  animation: fadeOut1 linear .3s;
+  animation-iteration-count: 1;
+  transform-origin: 0% 0%;
+  animation-fill-mode:forwards; /*when the spec is finished*/
+  -webkit-animation: fadeOut1 linear .3s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 0% 0%;
+  -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+  -moz-animation: fadeOut1 linear .3s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 0% 0%;
+  -moz-animation-fill-mode:forwards; /*FF 5+*/
+  -o-animation: fadeOut1 linear .3s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 0% 0%;
+  -o-animation-fill-mode:forwards; /*Not implemented yet*/
+  -ms-animation: fadeOut1 linear .3s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 0% 0%;
+  -ms-animation-fill-mode:forwards; /*IE 10+*/
+}
+
+@keyframes fadeOut1{
+  0% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+}
+
+@-moz-keyframes fadeOut1{
+  0% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -moz-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -moz-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+}
+
+@-webkit-keyframes fadeOut1 {
+  0% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -webkit-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -webkit-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+}
+
+@-o-keyframes fadeOut1 {
+  0% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -o-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -o-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+}
+
+@-ms-keyframes fadeOut1 {
+  0% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -ms-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  100% {
+    -ms-transform:  scaleX(0.00) scaleY(0.00) ;
+  }
+}
+
+
+/*-------------------------------------fade-out2-----------------------------------------*/
+.fade-out2{
+  animation: fadeOut2 linear .2s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode:forwards; /*when the spec is finished*/
+  -webkit-animation: fadeOut2 linear .2s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+  -moz-animation: fadeOut2 linear .2s;
+  -moz-animation-iteration-count: 1;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode:forwards; /*FF 5+*/
+  -o-animation: fadeOut2 linear .2s;
+  -o-animation-iteration-count: 1;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode:forwards; /*Not implemented yet*/
+  -ms-animation: fadeOut2 linear .2s;
+  -ms-animation-iteration-count: 1;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode:forwards; /*IE 10+*/
+}
+.scaleY0{
+    transform-origin: 50% 50%;
+    animation-fill-mode:forwards; /*when the spec is finished*/
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+    -moz-transform-origin: 50% 50%;
+    -moz-animation-fill-mode:forwards; /*FF 5+*/
+    -o-transform-origin: 50% 50%;
+    -o-animation-fill-mode:forwards; /*Not implemented yet*/
+    -ms-transform-origin: 50% 50%;
+    -ms-animation-fill-mode:forwards; /*IE 10+*/
+    transform:  scaleY(0.00) ;
+    -moz-transform:  scaleY(0.00) ;
+    -webkit-transform:  scaleY(0.00) ;
+    -o-transform:  scaleY(0.00) ;
+    -ms-transform:  scaleY(0.00) ;
+}
+
+@keyframes fadeOut2{
+  0% {
+    transform:  scaleY(1.00) ;
+  }
+  100% {
+    transform:  scaleY(0.00) ;
+  }
+}
+
+@-moz-keyframes fadeOut2{
+  0% {
+    -moz-transform:  scaleY(1.00) ;
+  }
+  100% {
+    -moz-transform:  scaleY(0.00) ;
+  }
+}
+
+@-webkit-keyframes fadeOut2 {
+  0% {
+    -webkit-transform:  scaleY(1.00) ;
+  }
+  100% {
+    -webkit-transform:  scaleY(0.00) ;
+  }
+}
+
+@-o-keyframes fadeOut2 {
+  0% {
+    -o-transform:  scaleY(1.00) ;
+  }
+  100% {
+    -o-transform:  scaleY(0.00) ;
+  }
+}
+
+@-ms-keyframes fadeOut2 {
+  0% {
+    -ms-transform:  scaleY(1.00) ;
+  }
+  100% {
+    -ms-transform:  scaleY(0.00) ;
+  }
+}
+
+/*-------------------------------------heart-----------------------------------------*/
+.heart-beat0{
+  animation: heartBeat0 linear 1.3s;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  animation-fill-mode:forwards; /*when the spec is finished*/
+  -webkit-animation: heartBeat0 linear 1.3s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+  -moz-animation: heartBeat0 linear 1.3s;
+  -moz-animation-iteration-count: infinite;
+  -moz-transform-origin: 50% 50%;
+  -moz-animation-fill-mode:forwards; /*FF 5+*/
+  -o-animation: heartBeat0 linear 1.3s;
+  -o-animation-iteration-count: infinite;
+  -o-transform-origin: 50% 50%;
+  -o-animation-fill-mode:forwards; /*Not implemented yet*/
+  -ms-animation: heartBeat0 linear 1.3s;
+  -ms-animation-iteration-count: infinite;
+  -ms-transform-origin: 50% 50%;
+  -ms-animation-fill-mode:forwards; /*IE 10+*/
+}
+
+@keyframes heartBeat0{
+  0% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  44% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  56% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  100% {
+    transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-moz-keyframes heartBeat0{
+  0% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  44% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -moz-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  56% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  100% {
+    -moz-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-webkit-keyframes heartBeat0 {
+  0% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  44% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -webkit-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  56% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  100% {
+    -webkit-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-o-keyframes heartBeat0 {
+  0% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  44% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -o-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  56% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  100% {
+    -o-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}
+
+@-ms-keyframes heartBeat0 {
+  0% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  44% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  50% {
+    -ms-transform:  scaleX(1.20) scaleY(1.20) ;
+  }
+  56% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+  100% {
+    -ms-transform:  scaleX(1.00) scaleY(1.00) ;
+  }
+}

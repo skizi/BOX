@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>capture to texture</title>
+    <script src="../../js/three.min.js"></script>
+    <script src="shaders/BokehShader.js"></script>
+</head>
+<body>
+<div id="debug"></div>
+
+    <script>
+        var debug = document.getElementById( "debug" );
+
+
+        var scene;
+        var renderer;
+        var camera;
+
+
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        var fov = 100;
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera(fov, aspect, 1, 2000);
+        camera.position.x = 0;
+        camera.position.y = 550;
+        camera.position.z = 200;
+        camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, .5);
+        light.position.set( 100, 500, 200);
+        light.castShadow = true;
+        scene.add(light);
+
+
+        var shader = THREE.BokehShader;
+        var bokehUniforms = THREE.UniformsUtils.clone( shader.uniforms );
+        bokehUniforms[ "tColor" ].value = THREE.ImageUtils.loadTexture('img/png_ball.png');
+        bokehUniforms[ "tDepth" ].value = THREE.ImageUtils.loadTexture('img/black.jpg');
+
+        bokehUniforms[ "focus" ].value = 4.0;
+//        bokehUniforms[ "aspect" ].value = aspect;
+//        bokehUniforms[ "aperture" ].value = aperture;
+        bokehUniforms[ "maxblur" ].value = 6.1;
+
+        var material = new THREE.ShaderMaterial({
+            vertexShader:shader.vertexShader,
+            fragmentShader:shader.fragmentShader,
+            uniforms: bokehUniforms
+            ,
+            //blending: THREE.NoBlending,
+            transparent: true,
+            side: THREE.FrontSide
+        });
+
+
+
+        var geometry = new THREE.BoxGeometry( 100, 100, 100 );
+        var sphere = new THREE.Mesh(geometry, material);
+        sphere.position.x = 0;
+        sphere.position.z = 0;
+        sphere.position.y = 150;
+        sphere.castShadow  = true;
+        scene.add(sphere);
+    
+
+
+
+    //ground
+    //テクスチャのないマテリアルに後でテクスチャを追加することはできないので、
+    //後でテクスチャ更新したい場合は最初からテクスチャを持たせる必要がある。
+    geometry = new THREE.PlaneGeometry( 400, 400, 5, 5 );
+    var material2 = new THREE.MeshBasicMaterial({ color: 0xffffff, side:THREE.DoubleSide, map:THREE.ImageUtils.loadTexture("img/snow_negative_z256.jpg") });
+    var mesh = new THREE.Mesh( geometry, material2 );
+    mesh.rotation.x = 270 *  Math.PI / 180;
+    mesh.receiveShadow = true;
+    scene.add( mesh );
+
+
+
+setTimeout( function(){
+
+    
+    renderer.render(scene, camera);
+
+    //get pixels
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+
+    var arr = new Uint8Array( w * h * 4 );
+    var gl = renderer.getContext("experimental-webgl", {preserveDrawingBuffer: true}); 
+    gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, arr );
+    console.debug("arr.length: "+arr.length);
+
+
+    //set canvas
+    var canvas =document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    var imgData = ctx.createImageData( w, h );
+    for (var i = 0; i < arr.length; i++) {
+        imgData.data[i] = arr[i];
+    }
+    ctx.putImageData( imgData, 0, 0, 0, 0, w, h );
+
+    document.body.appendChild( canvas );
+
+    //webglのimageDataの配列とcontext2DのimageDataの配列は上下反転しているので、キャンバスを反転する
+    ctx.save();
+    ctx.scale(1, -1);
+    ctx.drawImage(canvas, 0, -canvas.height);
+    ctx.restore();
+
+
+    //set img
+    var imgData2 = renderer.domElement.toDataURL();      
+    var img = document.createElement("img");
+    img.src = imgData2; //読み込みに時間かかる
+    img.onload = loadCompHandler;
+    document.body.appendChild(img);
+
+
+    //set texture from dataTexture
+    var texture = new THREE.DataTexture( arr, w, h, gl.RGBA);//第四引数がTHREE.RGBAFormatだと画像が上下反転してしまう。
+    mesh.material.map = texture;
+    mesh.material.map.needsUpdate = true;
+    renderer.render(scene, camera);
+
+    
+    function loadCompHandler(){ 
+
+        //set texture from img element
+        mesh.material.map = new THREE.Texture( img );
+        mesh.material.map.needsUpdate = true;
+        renderer.render(scene, camera);
+
+     }
+
+
+}, 1000);
+
+    </script>
+
+
+
+</body>
+</html>

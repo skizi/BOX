@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Shader TEST</title>
+    <script src="../../js/three.min.js"></script>
+
+
+    <script type="x-shader/x-vertex" id="vshader">
+    varying vec3 vNormal;
+    varying float uvY;
+
+    uniform vec3 viewVector;
+    
+    void main(void) {
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+        vNormal = normal;
+        
+        vec3 n = normalize( normalMatrix * normal );
+        vec3 v = normalize( normalMatrix * viewVector );
+        uvY = clamp( dot( n, v ), 0.0, 1.0 );
+        uvY = pow( uvY, 4.0 );
+    }
+    </script>
+ 
+    <script type="x-shader/x-fragment" id="fshader">
+    precision mediump float;
+    
+    uniform vec3 lightDirection;
+    uniform sampler2D texture;
+    
+    varying vec3 vNormal;
+    varying float uvY;
+    
+    void main(void) {
+        float diffuse = clamp(dot(vNormal, lightDirection), 0.0, 1.0);
+        vec4 c = texture2D(texture, vec2(diffuse, uvY));
+        gl_FragColor = c;
+    
+    }
+    </script>
+</head>
+<body>
+
+    <script>
+
+
+        var scene;
+        var renderer;
+        var camera;
+
+
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        var fov = 100;
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera(fov, aspect, 1, 20000);
+        camera.position.x = 0;
+        camera.position.y = 150;
+        camera.position.z = 200;
+        camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, .5);
+        light.position.set( 100, 1000, 200);
+        light.castShadow = true;
+        scene.add(light);
+
+
+
+        var material = new THREE.ShaderMaterial({
+            vertexShader: document.getElementById('vshader').textContent,
+            fragmentShader: document.getElementById('fshader').textContent,
+            
+            uniforms: {
+                texture: {
+                    type: 't', value: THREE.ImageUtils.loadTexture('img/toon3.png')
+                },
+                lightDirection: {
+                    type: 'v3',
+                    value: light.position
+                },
+                viewVector:{
+                    type:'v3',
+                    value:camera.position.clone().normalize()
+                }
+            },
+            blending: THREE.NoBlending,
+            transparent: true,
+            depthTest: false
+        });
+
+
+
+
+        var geometry = new THREE.SphereGeometry(100, 30, 30);
+        var sphere = new THREE.Mesh(geometry, material);
+        sphere.position.y = 150;
+        sphere.castShadow  = true;
+        scene.add(sphere);
+
+
+        material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        //material = new THREE.MeshBasicMaterial( { color:0xff0000, wireframe:true } );
+        geometry = new THREE.PlaneGeometry( 400, 400, 5, 5 );
+        var mesh = new THREE.Mesh( geometry, material );
+        mesh.rotation.x = 270 * Math.PI / 180;
+        mesh.receiveShadow = true;
+        scene.add( mesh );
+
+
+        var rot = 0;
+        var radius = 300;
+        animate();
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+            //cameraPos
+            rot++;
+            var radian = rot * Math.PI / 180;
+            var x = Math.cos( radian ) * radius;
+            var z = Math.sin( radian ) * radius;
+            camera.position.x = x;
+            camera.position.z = z;
+            camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+            //shader
+            sphere.material.uniforms.viewVector.value = 
+        new THREE.Vector3().subVectors( camera.position.clone(), sphere.position.clone() );
+
+            //render
+            renderer.render(scene, camera);
+
+        }
+
+
+    </script>
+
+
+
+</body>
+</html>

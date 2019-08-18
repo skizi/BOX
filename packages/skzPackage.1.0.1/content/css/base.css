@@ -1,0 +1,43 @@
+﻿body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+span {
+    font-style: italic;
+}
+
+body{
+	background-color:#4f4a47;
+	font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro',sans-serif;
+}
+
+*{
+	margin:0px;
+	padding:0px;
+}
+
+div#container{
+    position:relative;
+}
+
+
+canvas{
+    display:block;
+    position:absolute;
+    top:0px;
+}
+
+div#debug{
+    position:absolute;
+    top:0px;
+    color:#fff;
+}
+
+
+div#sound-btn{
+    position:absolute;
+    top:0px;
+    right:0px;
+    color:#fff;
+    cursor:pointer;
+}

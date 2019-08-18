@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>specular</title>
+    <script src="../../js/three.min.js"></script>
+
+
+    <script type="x-shader/x-vertex" id="vshader">
+    varying vec3 vNormal;
+    
+    void main(void) {
+        vec3 pos = position;
+        
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        
+        vNormal = normalize( normalMatrix * normal );
+    }
+    </script>
+ 
+    <script type="x-shader/x-fragment" id="fshader">
+    uniform vec3 lightDirection;
+    uniform vec3 cameraPos;
+
+    varying vec3 vNormal;
+
+    
+    void main(void) {
+
+        vec3 s = normalize( lightDirection );
+        float diffuse = max(0.0, dot(vNormal, s));
+        vec3 v = normalize( cameraPos );
+        vec3 h = normalize( v + s );
+        float specular = pow( max( dot( vNormal, h ), 0.0 ), 60.0 );
+        gl_FragColor = vec4( vec3( diffuse + specular ), 1.0 );
+        
+    }
+    </script>
+</head>
+<body>
+
+    <script>
+
+
+        var scene;
+        var renderer;
+        var camera;
+
+
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        var fov = 100;
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera(fov, aspect, 1, 20000);
+        camera.position.x = 0;
+        camera.position.y = 150;
+        camera.position.z = 200;
+        camera.lookAt( new THREE.Vector3( 0, 100, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, .5);
+        light.position.set( 100, 500, 200);
+        light.castShadow = true;
+        scene.add(light);
+
+
+
+        var material = new THREE.ShaderMaterial({
+            vertexShader: document.getElementById('vshader').textContent,
+            fragmentShader: document.getElementById('fshader').textContent,
+            
+            uniforms: {
+                lightDirection: {
+                    type: 'v3',
+                    value: light.position.clone().normalize()/*-mesh.position.clone().normalize()*/
+                },
+                cameraPos:{
+                    type:'v3',
+                    value:camera.position.clone().normalize()
+                }
+            },
+            blending: THREE.NoBlending, transparent: true, depthTest: false
+        });
+
+
+
+        var geometry = new THREE.SphereGeometry(100, 30, 30);
+        var mesh = new THREE.Mesh(geometry, material);
+        mesh.position.y = 150;
+        mesh.castShadow  = true;
+        scene.add(mesh);
+
+
+        material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        //material = new THREE.MeshBasicMaterial( { color:0xff0000, wireframe:true } );
+        geometry = new THREE.PlaneGeometry( 400, 400, 5, 5 );
+        mesh = new THREE.Mesh( geometry, material );
+        mesh.rotation.x = 90 * 180 / Math.PI;
+        mesh.receiveShadow = true;
+        scene.add( mesh );
+
+        animate();
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+
+            renderer.render(scene, camera);
+
+        }
+
+
+    </script>
+
+
+
+</body>
+</html>

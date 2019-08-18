@@ -1,0 +1,9 @@
+G:\Dropbox\project\html\javascript\webGL\three\sketch001\sketch001\bin\sketch001.dll.config
+G:\Dropbox\project\html\javascript\webGL\three\sketch001\sketch001\bin\sketch001.dll
+G:\Dropbox\project\html\javascript\webGL\three\sketch001\sketch001\bin\sketch001.pdb
+G:\Dropbox\project\html\javascript\webGL\three\sketch001\sketch001\obj\Debug\sketch001.csprojResolveAssemblyReference.cache
+G:\Dropbox\project\html\javascript\webGL\three\sketch001\sketch001\obj\Debug\sketch001.dll
+G:\Dropbox\project\html\javascript\webGL\three\sketch001\sketch001\obj\Debug\sketch001.pdb
+G:\Dropbox\project\html\typescript\sketch001\sketch001\obj\Debug\sketch001.csprojResolveAssemblyReference.cache
+G:\Dropbox\project\html\typescript\sketch001\sketch001\obj\Debug\sketch001.dll
+G:\Dropbox\project\html\typescript\sketch001\sketch001\obj\Debug\sketch001.pdb

@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Particle TEST</title>
+    <script src="../../js/three.min.js"></script>
+    <script src="../../js/ShaderParticles.min.js"></script>
+
+
+</head>
+<body>
+
+    <script>
+
+
+        var scene;
+        var renderer;
+        var camera;
+
+
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        var fov = 100;
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera(fov, aspect, .1, 10000);
+        camera.position.x = 0;
+        camera.position.y = 20;
+        camera.position.z = 50;
+        camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
+
+        
+        var light = new THREE.DirectionalLight(0xffffff, .5);
+        light.position.set( 100, 500, 200);
+        light.castShadow = true;
+        scene.add(light);
+
+
+
+        //ground
+        var material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        //material = new THREE.MeshBasicMaterial( { color:0xff0000, wireframe:true } );
+        var geometry = new THREE.PlaneGeometry( 400, 400, 5, 5 );
+        var mesh = new THREE.Mesh( geometry, material );
+        mesh.rotation.x = 90 * 180 / Math.PI;
+        mesh.receiveShadow = true;
+        scene.add( mesh );
+
+
+
+        //particle
+        // Create particle group
+        var particleGroup = new SPE.Group({
+            texture: THREE.ImageUtils.loadTexture("img/png_ball.png"),
+            maxAge: 0.3888888888888889,
+            hasPerspective: 1,
+            colorize: 1,
+            transparent: 1,
+            alphaTest: 0.5,
+            depthWrite: false,
+            depthTest: true,
+            blending: THREE.AdditiveBlending
+        });
+
+        // Create particle emitter 0
+        var Untitled1Emitter = new SPE.Emitter( {
+            type: 'sphere',
+            particleCount: 100,
+            position: new THREE.Vector3( 0, 10, 0 ),
+            positionSpread: new THREE.Vector3( 0, 0, 0 ),
+            radius: 10,
+            radiusSpread: 0,
+            radiusSpreadClamp: 0,
+            radiusScale: new THREE.Vector3( 0.20555555555555555, 0.2388888888888889, 0.23333333333333334 ),
+            speed: 5,
+            speedSpread: 2.1944444444444446,
+            sizeStart: 1,
+            sizeStartSpread: 0,
+            sizeMiddle: 2.9444444444444446,
+            sizeMiddleSpread: 0,
+            sizeEnd: 5.722222222222222,
+            sizeEndSpread: 0,
+            angleStart: 0,
+            angleStartSpread: 0,
+            angleMiddle: 0,
+            angleMiddleSpread: 0,
+            angleEnd: 0,
+            angleEndSpread: 0,
+            angleAlignVelocity: false,
+            colorStart: new THREE.Color( 0xfe4700 ),
+            colorStartSpread: new THREE.Vector3( 0, 0, 0 ),
+            colorMiddle: new THREE.Color( 0xffe543 ),
+            colorMiddleSpread: new THREE.Vector3( 0, 0, 0 ),
+            colorEnd: new THREE.Color( 0xfed700 ),
+            colorEndSpread: new THREE.Vector3( 0, 0, 0 ),
+            opacityStart: 1,
+            opacityStartSpread: 0,
+            opacityMiddle: 0.5,
+            opacityMiddleSpread: 0,
+            opacityEnd: 0,
+            opacityEndSpread: 0,
+            duration: null,
+            alive: 0.18333333333333332,
+            isStatic: 0
+        } );
+
+
+        particleGroup.addEmitter( Untitled1Emitter );
+
+        // Add mesh to your scene. Adjust as necessary.
+        scene.add( particleGroup.mesh );
+
+
+
+
+
+
+
+        var clock = new THREE.Clock();
+        animate();
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+            var delta = clock.getDelta();
+            particleGroup.tick( delta );
+
+            renderer.render(scene, camera);
+
+        }
+
+
+    </script>
+
+
+
+</body>
+</html>
