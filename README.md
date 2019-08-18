@@ -5,5 +5,5 @@ TypeScriptで作成したWebブラウザ上で動作する3Dゲームです。
 ・GLSL、TypeScript、css、HTML5  
 ・使用ライブラリThree.js、Pixi.js   
 
-
+<img src="http://skizi.jp/img/box.jpg" width="500">
 https://www.youtube.com/embed/BvJNhCDP6F4
